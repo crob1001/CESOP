@@ -15,7 +15,7 @@ __author__ = "Christian Roberts"
 def buildLTMsgSpec(messageTypeIndic, transmittingCountry, quarter, year):
     msgSpec = xmlBuilder.XmlElement.XmlElement("MessageSpec")
 
-    tranmitingCountry = xmlBuilder.XmlElement.XmlElement("TransmittingCountry", transmittingCountry, True)
+    transmitingCountry = xmlBuilder.XmlElement.XmlElement("TransmittingCountry", transmittingCountry, True)
     msgType = xmlBuilder.XmlElement.XmlElement("MessageType", "PMT", True)
     messageTypeIndic = xmlBuilder.XmlElement.XmlElement("MessageTypeIndic", messageTypeIndic, True)
     MessageRefId = xmlBuilder.XmlElement.XmlElement("MessageRefId", uuid4(), True)
@@ -24,7 +24,7 @@ def buildLTMsgSpec(messageTypeIndic, transmittingCountry, quarter, year):
                                  xmlBuilder.XmlElement.XmlElement("Year", year, True)])
     Timestamp = xmlBuilder.XmlElement.XmlElement("Timestamp", datetime.today().strftime('%Y-%m-%dT%H:%M:%SZ'), True)
 
-    msgSpec.addChildren([tranmitingCountry, msgType, messageTypeIndic, MessageRefId, ReportingPeriod,
+    msgSpec.addChildren([transmitingCountry, msgType, messageTypeIndic, MessageRefId, ReportingPeriod,
                          Timestamp])
 
     return msgSpec
@@ -71,7 +71,8 @@ def buildReportedTransaction(transactionIdentifier, dateTime, isRefund, transact
     payerMS = xmlBuilder.XmlElement.XmlElement("PayerMS", payerMS, True)
     payerMS.updateAttrib("PayerMSSource", payerMSSource)
 
-    pspRole = xmlBuilder.XmlElement.XmlElement("PSPRole", pspRole, True)
+    pspRoleType = xmlBuilder.XmlElement.XmlElement("PSPRoleType", pspRole, True)
+    pspRole = xmlBuilder.XmlElement.XmlElement("PSPRole", pspRoleType, False)
     
     reportedTransaction.addChildren([transactionIdentifier, dateTime, amount, paymentMethod, initiatedAtPhysicalPremisesOfMerchant,
                                      payerMS, pspRole])
@@ -147,8 +148,8 @@ def buildReportedPayee(df, countryMS):
 
     taxIdentification.addChildren([VATId, TAXId])
 
-    reportedPayee.addChildren([name, country, address, #emailAddress, webPage, 
-                               taxIdentification])
+    reportedPayee.addChildren([name, country, address#, emailAddress, webPage, 
+                               ])
 
     i = 0
 
@@ -180,7 +181,7 @@ def buildReportedPayee(df, countryMS):
 
     reportedPayee.addChild(xmlBuilder.MtElement.MtElement())
 
-    reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("nameType")]))
+    reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("NameType")]))
 
     reportedPayee.addChild(buildDocSpec(df.iat[0,legend.FileLocations.index("DocTypeIndic")]))
 

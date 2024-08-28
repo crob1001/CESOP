@@ -44,7 +44,7 @@ FileLocations = [
     "RepresentativeId",
     "PSPIdType",
     "Name",
-    "nameType",
+    "NameType",
     "DocTypeIndic",
     "DocRefId",
     "CorrMessageRefId",
