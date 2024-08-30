@@ -115,7 +115,7 @@ def buildReportedPayee(df, countryMS):
     match(countryMS):
         case "LT" :
             address.updateAttrib("LegalAddressType", df.iat[0,legend.FileLocations.index("legalAddressType")].replace(' ',''))
-            address.addChild(" ".join(f"{df.iat[0,legend.FileLocations.index("Street")]} {df.iat[0,legend.FileLocations.index("BuildingIdentifier")]} {df.iat[0,legend.FileLocations.index("SuiteIdentifier")]} {df.iat[0,legend.FileLocations.index("FloorIdentifier")]} {df.iat[0,legend.FileLocations.index("DistrictName")]} {df.iat[0,legend.FileLocations.index("POB")]} {df.iat[0,legend.FileLocations.index("PostCode")]} {df.iat[0,legend.FileLocations.index("City")]} {df.iat[0,legend.FileLocations.index("CountrySubentity")]}".split()))
+            address.addChild(" ".join(f'{df.iat[0,legend.FileLocations.index("Street")]} {df.iat[0,legend.FileLocations.index("BuildingIdentifier")]} {df.iat[0,legend.FileLocations.index("SuiteIdentifier")]} {df.iat[0,legend.FileLocations.index("FloorIdentifier")]} {df.iat[0,legend.FileLocations.index("DistrictName")]} {df.iat[0,legend.FileLocations.index("POB")]} {df.iat[0,legend.FileLocations.index("PostCode")]} {df.iat[0,legend.FileLocations.index("City")]} {df.iat[0,legend.FileLocations.index("CountrySubentity")]}'.split()))
         
         case "NL" :
             address.setInline(False)
@@ -137,7 +137,7 @@ def buildReportedPayee(df, countryMS):
 
     # webPage = xmlBuilder.XmlElement.XmlElement("WebPage", df.iat[0,legend.FileLocations.index("WebPage")], True)
 
-    taxIdentification = xmlBuilder.XmlElement.XmlElement("TAXIdentification")
+    taxIdentification = xmlBuilder.XmlElement.XmlElement("TAXIdentification", None, False)
 
     VATId = xmlBuilder.XmlElement.XmlElement("VATId", df.iat[0,legend.FileLocations.index("VATId")],True)
     VATId.updateAttrib("issuedBy", df.iat[0,19])
@@ -146,10 +146,10 @@ def buildReportedPayee(df, countryMS):
     TAXId.updateAttrib("issuedBy", df.iat[0,legend.FileLocations.index("issuedByTAX")])
     TAXId.updateAttrib("type", df.iat[0,legend.FileLocations.index("typeTAX")])
 
-    taxIdentification.addChildren([VATId, TAXId])
+    # taxIdentification.addChildren([VATId, TAXId])
 
-    reportedPayee.addChildren([name, country, address#, emailAddress, webPage, 
-                               ])
+    reportedPayee.addChildren([name, country, address#, emailAddress, webPage
+                               ,taxIdentification])
 
     i = 0
 
@@ -181,7 +181,7 @@ def buildReportedPayee(df, countryMS):
 
     reportedPayee.addChild(xmlBuilder.MtElement.MtElement())
 
-    reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("NameType")]))
+    # reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("NameType")]))
 
     reportedPayee.addChild(buildDocSpec(df.iat[0,legend.FileLocations.index("DocTypeIndic")]))
 
@@ -195,23 +195,12 @@ def buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
     for i in fileList:
         with open(i, 'rb') as f:
             file = pd.read_excel(f).fillna('')
-        payees = []
 
-        k = 0
-    
-        while k < len(file.index):
-            exists = False
-            for j in payees:
-                if j == file.iat[k,legend.FileLocations.index("PayeeName")]:
-                    exists = True
-            if exists == False:
-                payees.append(file.iat[k,legend.FileLocations.index("PayeeName")])
-            k+=1
+        dfs = file.groupby(['PayeeName', 'CountryCode'])
 
-        dfs = file.groupby(file['PayeeName'])
-
-        for i in payees:
-            paymentDataBody.addChild(buildReportedPayee(dfs.get_group(i), countryMS))
+        for countryCode, payeeName in dfs:
+            # print(payeeName)
+            paymentDataBody.addChild(buildReportedPayee(dfs.get_group(countryCode), countryMS))
 
     return paymentDataBody
 
