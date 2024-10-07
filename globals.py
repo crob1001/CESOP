@@ -20,6 +20,7 @@ __quarters__ = {
 global __countries__ 
 __countries__ = {
     "LT": "Lithuania",
+    "PL": "Poland",
     "NL": "Netherlands"
 }
 

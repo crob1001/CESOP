@@ -1,10 +1,11 @@
 # import sys
+import sys
 import pandas as pd
 from uuid import uuid4
-# from pathlib import Path
+from pathlib import Path
+import xmlBuilder.MtElement
 import xmlBuilder.XmlSchema
 import xmlBuilder.XmlElement
-import xmlBuilder.MtElement
 from datetime import datetime
 
 import globals
@@ -113,9 +114,6 @@ def buildReportedPayee(df, countryMS):
     address = xmlBuilder.XmlElement.XmlElement("Address", None, True)
 
     match(countryMS):
-        case "LT" :
-            address.updateAttrib("LegalAddressType", df.iat[0,legend.FileLocations.index("legalAddressType")].replace(' ',''))
-            address.addChild(" ".join(f'{df.iat[0,legend.FileLocations.index("Street")]} {df.iat[0,legend.FileLocations.index("BuildingIdentifier")]} {df.iat[0,legend.FileLocations.index("SuiteIdentifier")]} {df.iat[0,legend.FileLocations.index("FloorIdentifier")]} {df.iat[0,legend.FileLocations.index("DistrictName")]} {df.iat[0,legend.FileLocations.index("POB")]} {df.iat[0,legend.FileLocations.index("PostCode")]} {df.iat[0,legend.FileLocations.index("City")]} {df.iat[0,legend.FileLocations.index("CountrySubentity")]}'.split()))
         
         case "NL" :
             address.setInline(False)
@@ -132,6 +130,10 @@ def buildReportedPayee(df, countryMS):
             addressFix.addChildren([street, postCode, city, countrySubentity])
 
             address.addChildren([countryCode, addressFix])
+        
+        case _ :
+            address.updateAttrib("LegalAddressType", df.iat[0,legend.FileLocations.index("legalAddressType")].replace(' ',''))
+            address.addChild(" ".join(f'{df.iat[0,legend.FileLocations.index("Street")]} {df.iat[0,legend.FileLocations.index("BuildingIdentifier")]} {df.iat[0,legend.FileLocations.index("SuiteIdentifier")]} {df.iat[0,legend.FileLocations.index("FloorIdentifier")]} {df.iat[0,legend.FileLocations.index("DistrictName")]} {df.iat[0,legend.FileLocations.index("POB")]} {df.iat[0,legend.FileLocations.index("PostCode")]} {df.iat[0,legend.FileLocations.index("City")]} {df.iat[0,legend.FileLocations.index("CountrySubentity")]}'.split()))
     
     # emailAddress = xmlBuilder.XmlElement.XmlElement("EmailAddress", df.iat[0,legend.FileLocations.index("EmailAddress")], True)
 
@@ -179,11 +181,11 @@ def buildReportedPayee(df, countryMS):
                                                         df.iat[i,legend.FileLocations.index("PSPRoleType")]))
         i+=1
 
-    reportedPayee.addChild(xmlBuilder.MtElement.MtElement())
-
     # reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("NameType")]))
 
     reportedPayee.addChild(buildDocSpec(df.iat[0,legend.FileLocations.index("DocTypeIndic")]))
+
+    reportedPayee.addChild(xmlBuilder.MtElement.MtElement())
 
     return reportedPayee
 
@@ -199,8 +201,8 @@ def buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
         dfs = file.groupby(['PayeeName', 'CountryCode'])
 
         for countryCode, payeeName in dfs:
-            # print(payeeName)
-            paymentDataBody.addChild(buildReportedPayee(dfs.get_group(countryCode), countryMS))
+            group = dfs.get_group(countryCode)
+            paymentDataBody.addChild(buildReportedPayee(group, countryMS))
 
     return paymentDataBody
 
@@ -259,6 +261,8 @@ def build(quarter, year, countryMS, pspId, partNumber, partTotal, MessageTypeInd
     #schema
     schema = xmlBuilder.XmlSchema.XmlSchema()
 
+    paymentDataBody = buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS)
+
     match(countryMS):
         case "NL" :
             #cesop Element
@@ -267,7 +271,7 @@ def build(quarter, year, countryMS, pspId, partNumber, partTotal, MessageTypeInd
             
             pspNL = buildPSPNL()
             
-            paymentDataBody = buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS)
+            
             paymentDataBody.setTag("pspnl:" + paymentDataBody.getTag())
 
             for i in paymentDataBody.children:
@@ -290,15 +294,17 @@ def build(quarter, year, countryMS, pspId, partNumber, partTotal, MessageTypeInd
             schema.addElement(pspNL)
             #  cesop.addChild()
 
-        case "LT":
+        case _:
             #cesop Element
             cesop = xmlBuilder.XmlElement.XmlElement("CESOP")
             cesop.updateAttrib("version", globals.__cesopVersion__)
 
             cesop.updateAttrib("xmlns", f"urn:ec.europa.eu:taxud:fiscalis:cesop:v{globals.__xmlVersion__.split('.')[0]}")
             cesop.addChildren([buildLTMsgSpec(MessageTypeIndic, countryMS, quarter, year),
-                               buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS)])
+                               paymentDataBody])
             schema.addElement(cesop)
 
     #out
-    schema.toFile(quarter, year, countryMS, pspId, partNumber, partTotal)
+    fileName = f"PMT-{quarter}-{year}-{countryMS}-{pspId}-{partNumber}-{partTotal}.xml"
+    filePath = Path(sys.argv[0]).parent.absolute().__str__()+"/out/"
+    schema.toFile(fileName, filePath)
