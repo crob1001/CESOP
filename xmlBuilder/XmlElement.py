@@ -32,19 +32,19 @@ class XmlElement:
                 out = f"{out}>\n"
                 for i in self.children:
                     if (isinstance(i, XmlElement)):
-                        out = f"{out}{textwrap.indent(i.__str__(), '\t')}"
+                        out = out + textwrap.indent(i.__str__(), '\t')
                     else:
-                        out = f"{out}{textwrap.indent(str(i), '\t')}\n"
-                out = f"{out}</{self.tag}>\n"
+                        out = out + textwrap.indent(str(i), '\t') + "\n"
+                out = out + "</"+self.tag+">\n"
             else:
                 out = f"{out}>"
                 for i in self.children:
                     if (isinstance(i, XmlElement)):
                         i.setInline(True)
-                        out = f"{out}{i.__str__().rstrip('\n')}"
+                        out = out + i.__str__().rstrip('\n')
                     else:
-                        out = f"{out}{str(i)}"
-                out = f"{out}</{self.tag}>\n"
+                        out = out + str(i)
+                out = out + "</"+self.tag+">\n"
         return out
 
     # def setcontent(self, content):

@@ -1,6 +1,3 @@
-from pathlib import Path
-import sys
-
 #xml version 1.0
 #UTF-8 encoding
 
@@ -16,10 +13,7 @@ class XmlSchema:
     def addElement(self, element):
         self.content[element.getTag()] = element
 
-    def toFile(self, quarter, year, countryMS, pspId, partNumber, partTotal):
-        filePath = Path(sys.argv[0]).parent.absolute().__str__()+"/out/"
-        fileName = f"PMT-{quarter}-{year}-{countryMS}-{pspId}-{partNumber}-{partTotal}.xml"
-
+    def toFile(self, fileName, filePath):
         file = open(filePath+fileName, "w", encoding="utf-8")
 
         file.write(self.__str__())
