@@ -9,7 +9,7 @@ import builder
 import guiElements.SeperatingLine as SeperatingLine
 import guiElements.LabeledTextBox as LabeledTextBox
 import guiElements.LabeledComboBox as LabeledComboBox
-import xmlBuilder.fileHandlerWidget as fileHandlerWidget
+import guiElements.fileHandlerWidget as fileHandlerWidget
 
 __author__ = "Christian Roberts"
 
