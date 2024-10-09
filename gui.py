@@ -5,11 +5,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QAction, QLabel, QPushButton
 
 import globals
-import builder
-import guiElements.SeperatingLine as SeperatingLine
-import guiElements.LabeledTextBox as LabeledTextBox
-import guiElements.LabeledComboBox as LabeledComboBox
-import guiElements.fileHandlerWidget as fileHandlerWidget
+from builder import builderMain
+from guiElements import SeperatingLine, LabeledTextBox, LabeledComboBox, fileHandlerWidget
 
 __author__ = "Christian Roberts"
 
@@ -109,7 +106,7 @@ class MainWindow(QMainWindow):
 
     def build(self):
 
-        builder.build(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
+        builderMain.build(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
                     list(globals.__countries__.keys())[self.CountryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
                     self.pageNumInputBox.getInputText(), self.pageTotalInputBox.getInputText(),
                     list(globals.__msgTypeIndic__.keys())[self.MessageTypeIndic.getindex()],
