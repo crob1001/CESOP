@@ -8,23 +8,22 @@ class LabeledComboBox:
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
+
         self.index = 0
         self.label = QLabel()
         self.combo = QComboBox()
         self.container = QWidget()
 
-        # container = QWidget(self)
         self.container.setLayout(QGridLayout())
         self.container.setMaximumSize(200, 50)
-
-        # self.label.setAlignment()
-
-        self.label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
 
         self.container.layout().addWidget(self.label, 0, 0)
         self.container.layout().addWidget(self.combo, 0, 1)
 
+        self.label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+
     def setFields(self, labelText, selectionList):
+        
         self.label.setText(labelText)
 
         self.combo.addItems(selectionList)

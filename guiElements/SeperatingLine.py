@@ -12,11 +12,8 @@ class SeperatingLine:
         self.container = QWidget()
 
         self.separador.setFrameShape(QFrame.HLine)
-        # self.separador.setSizePolicy(QSizePolicy.Minimum,QSizePolicy.Expanding)
         self.separador.setLineWidth(1)
-
         self.container.setLayout(QGridLayout())
-
         self.container.layout().addWidget(self.separador, 0, 0)
 
     def getWidget(self):

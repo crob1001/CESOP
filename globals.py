@@ -9,6 +9,19 @@ __xmlVersion__ = "1.0"
 global __cesopVersion__
 __cesopVersion__ = "4.02"
 
+global __pspID__
+__pspID__ = ""
+
+global __sendingPSPName__
+__sendingPSPName__ = ""
+
+
+global __RSIN__
+__RSIN__ = ""
+
+global __KVK__ 
+__KVK__ = ""
+
 global __quarters__ 
 __quarters__ = {
     "Q1": {"01-01", "03-31"},
@@ -22,16 +35,11 @@ __countries__ = {
     "LT": "Lithuania",
     "PL": "Poland",
     "NL": "Netherlands"
+    
 }
 
-global __pspID__
-__pspID__ = ""
-
-global __CompanyName__
-__CompanyName__ = ""
-
-global __MsgTypeIndic__
-__MsgTypeIndic__ = {
+global __msgTypeIndic__
+__msgTypeIndic__ = {
     "CESOP100": "The message contains new data.",
     "CESOP101": "The message contains corrections or deletions of previously sent data.",
     "CESOP102": "The message indicates there is no data to report."
@@ -51,21 +59,3 @@ __NameTypes__ = {
 	"PERSON"  : "Person name",
 	"OTHER"   : "Other name" 
 }
-
-global __RSIN__
-__RSIN__ = ""
-
-global __KVK__ 
-__KVK__ = ""
-
-global __sendingPSPID__
-__sendingPSPID__ = ""
-
-global __sendingPSPIDType__
-__sendingPSPIDType__ = ""
-
-global __sendingPSPName__
-__sendingPSPName__ = ""
-
-global __sendingPSPNameType__
-__sendingPSPNameType__ = ""

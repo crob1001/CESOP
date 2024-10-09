@@ -3,7 +3,6 @@ import sys
 import pandas as pd
 from uuid import uuid4
 from pathlib import Path
-import xmlBuilder.MtElement
 import xmlBuilder.XmlSchema
 import xmlBuilder.XmlElement
 from datetime import datetime
@@ -106,10 +105,10 @@ def buildaccountIdentifiers() -> list:
 def buildReportedPayee(df, countryMS):
     reportedPayee = xmlBuilder.XmlElement.XmlElement("ReportedPayee")
 
-    name = xmlBuilder.XmlElement.XmlElement("Name", df.iat[0,legend.FileLocations.index("PayeeName")], True)
-    name.updateAttrib("NameType", df.iat[0,legend.FileLocations.index("PayeeNameType")])
+    name = xmlBuilder.XmlElement.XmlElement("Name", df.iat[0,legend.__fieldOrder__.index("PayeeName")], True)
+    name.updateAttrib("NameType", df.iat[0,legend.__fieldOrder__.index("PayeeNameType")])
 
-    country = xmlBuilder.XmlElement.XmlElement("Country", df.iat[0,legend.FileLocations.index("CountryCode")], True)
+    country = xmlBuilder.XmlElement.XmlElement("Country", df.iat[0,legend.__fieldOrder__.index("CountryCode")], True)
 
     address = xmlBuilder.XmlElement.XmlElement("Address", None, True)
 
@@ -117,36 +116,33 @@ def buildReportedPayee(df, countryMS):
         
         case "NL" :
             address.setInline(False)
-            address.updateAttrib("LegalAddressType", df.iat[0,legend.FileLocations.index("legalAddressType")].replace(' ',''))
+            address.updateAttrib("LegalAddressType", df.iat[0,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
 
             countryCode = xmlBuilder.XmlElement.XmlElement("cm:CountryCode", countryMS, True)
             addressFix = xmlBuilder.XmlElement.XmlElement("cm:AddressFix", None, False)
 
-            street = xmlBuilder.XmlElement.XmlElement("cm:Street", df.iat[0,legend.FileLocations.index("Street")], True)
-            postCode = xmlBuilder.XmlElement.XmlElement("cm:PostCode", df.iat[0,legend.FileLocations.index("PostCode")], True)
-            city = xmlBuilder.XmlElement.XmlElement("cm:City", df.iat[0,legend.FileLocations.index("City")], True)
-            countrySubentity = xmlBuilder.XmlElement.XmlElement("cm:CountrySubentity", df.iat[0,legend.FileLocations.index("CountrySubentity")], True)
+            street = xmlBuilder.XmlElement.XmlElement("cm:Street", df.iat[0,legend.__fieldOrder__.index("Street")], True)
+            postCode = xmlBuilder.XmlElement.XmlElement("cm:PostCode", df.iat[0,legend.__fieldOrder__.index("PostCode")], True)
+            city = xmlBuilder.XmlElement.XmlElement("cm:City", df.iat[0,legend.__fieldOrder__.index("City")], True)
+            countrySubentity = xmlBuilder.XmlElement.XmlElement("cm:CountrySubentity", df.iat[0,legend.__fieldOrder__.index("CountrySubentity")], True)
 
             addressFix.addChildren([street, postCode, city, countrySubentity])
 
             address.addChildren([countryCode, addressFix])
         
         case _ :
-            address.updateAttrib("LegalAddressType", df.iat[0,legend.FileLocations.index("legalAddressType")].replace(' ',''))
-            address.addChild(" ".join(f'{df.iat[0,legend.FileLocations.index("Street")]} {df.iat[0,legend.FileLocations.index("BuildingIdentifier")]} {df.iat[0,legend.FileLocations.index("SuiteIdentifier")]} {df.iat[0,legend.FileLocations.index("FloorIdentifier")]} {df.iat[0,legend.FileLocations.index("DistrictName")]} {df.iat[0,legend.FileLocations.index("POB")]} {df.iat[0,legend.FileLocations.index("PostCode")]} {df.iat[0,legend.FileLocations.index("City")]} {df.iat[0,legend.FileLocations.index("CountrySubentity")]}'.split()))
+            address.updateAttrib("LegalAddressType", df.iat[0,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
+            address.addChild(" ".join(f'{df.iat[0,legend.__fieldOrder__.index("Street")]} {df.iat[0,legend.__fieldOrder__.index("BuildingIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("SuiteIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("FloorIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("DistrictName")]} {df.iat[0,legend.__fieldOrder__.index("POB")]} {df.iat[0,legend.__fieldOrder__.index("PostCode")]} {df.iat[0,legend.__fieldOrder__.index("City")]} {df.iat[0,legend.__fieldOrder__.index("CountrySubentity")]}'.split()))
     
-    # emailAddress = xmlBuilder.XmlElement.XmlElement("EmailAddress", df.iat[0,legend.FileLocations.index("EmailAddress")], True)
-
-    # webPage = xmlBuilder.XmlElement.XmlElement("WebPage", df.iat[0,legend.FileLocations.index("WebPage")], True)
 
     taxIdentification = xmlBuilder.XmlElement.XmlElement("TAXIdentification", None, False)
 
-    VATId = xmlBuilder.XmlElement.XmlElement("VATId", df.iat[0,legend.FileLocations.index("VATId")],True)
+    VATId = xmlBuilder.XmlElement.XmlElement("VATId", df.iat[0,legend.__fieldOrder__.index("VATId")],True)
     VATId.updateAttrib("issuedBy", df.iat[0,19])
 
-    TAXId = xmlBuilder.XmlElement.XmlElement("TAXId", df.iat[0,legend.FileLocations.index("TAXId")], True)
-    TAXId.updateAttrib("issuedBy", df.iat[0,legend.FileLocations.index("issuedByTAX")])
-    TAXId.updateAttrib("type", df.iat[0,legend.FileLocations.index("typeTAX")])
+    TAXId = xmlBuilder.XmlElement.XmlElement("TAXId", df.iat[0,legend.__fieldOrder__.index("TAXId")], True)
+    TAXId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByTAX")])
+    TAXId.updateAttrib("type", df.iat[0,legend.__fieldOrder__.index("typeTAX")])
 
     # taxIdentification.addChildren([VATId, TAXId])
 
@@ -160,32 +156,31 @@ def buildReportedPayee(df, countryMS):
     while i < len(df.index):
         exists = False
         for j in accountIdentifiers:
-            if j == df.iat[i,legend.FileLocations.index("AccountIdentifier")]:
+            if j == df.iat[i,legend.__fieldOrder__.index("AccountIdentifier")]:
                 exists = True
         if exists == False:
-            accountIdentifiers.append(df.iat[i,legend.FileLocations.index("AccountIdentifier")])
-            accountIdentifier = xmlBuilder.XmlElement.XmlElement("AccountIdentifier", df.iat[i,legend.FileLocations.index("AccountIdentifier")], True)
-            accountIdentifier.updateAttrib("CountryCode", df.iat[i,legend.FileLocations.index("CountryCode")])
-            accountIdentifier.updateAttrib("Type", df.iat[i,legend.FileLocations.index("typeAccount")])
+            accountIdentifiers.append(df.iat[i,legend.__fieldOrder__.index("AccountIdentifier")])
+            accountIdentifier = xmlBuilder.XmlElement.XmlElement("AccountIdentifier", df.iat[i,legend.__fieldOrder__.index("AccountIdentifier")], True)
+            accountIdentifier.updateAttrib("CountryCode", df.iat[i,legend.__fieldOrder__.index("CountryCode")])
+            accountIdentifier.updateAttrib("Type", df.iat[i,legend.__fieldOrder__.index("typeAccount")])
             reportedPayee.addChild(accountIdentifier)
         i+=1
 
     i = 0
 
     while i < len(df.index):
-        reportedPayee.addChild(buildReportedTransaction(df.iat[i,legend.FileLocations.index("TransactionIdentifier")], df.iat[i,legend.FileLocations.index("DateTime")],
-                                                        df.iat[i,legend.FileLocations.index("IsRefund")], df.iat[i,legend.FileLocations.index("transactionDateType")],
-                                                        df.iat[i,legend.FileLocations.index("Amount")], df.iat[i,legend.FileLocations.index("currency")],
-                                                        df.iat[i,legend.FileLocations.index("PaymentMethodType")], df.iat[i,legend.FileLocations.index("InitiatedAtPhysicalPremisesOfMerchant")],
-                                                        df.iat[i,legend.FileLocations.index("PayerMS")], df.iat[i,legend.FileLocations.index("PayerMSSource")],
-                                                        df.iat[i,legend.FileLocations.index("PSPRoleType")]))
+        reportedPayee.addChild(buildReportedTransaction(df.iat[i,legend.__fieldOrder__.index("TransactionIdentifier")], df.iat[i,legend.__fieldOrder__.index("DateTime")],
+                                                        df.iat[i,legend.__fieldOrder__.index("IsRefund")], df.iat[i,legend.__fieldOrder__.index("transactionDateType")],
+                                                        df.iat[i,legend.__fieldOrder__.index("Amount")], df.iat[i,legend.__fieldOrder__.index("currency")],
+                                                        df.iat[i,legend.__fieldOrder__.index("PaymentMethodType")], df.iat[i,legend.__fieldOrder__.index("InitiatedAtPhysicalPremisesOfMerchant")],
+                                                        df.iat[i,legend.__fieldOrder__.index("PayerMS")], df.iat[i,legend.__fieldOrder__.index("PayerMSSource")],
+                                                        df.iat[i,legend.__fieldOrder__.index("PSPRoleType")]))
         i+=1
 
-    # reportedPayee.addChild(buildRepresentative(df.iat[0,legend.FileLocations.index("RepresentativeId")], df.iat[0,legend.FileLocations.index("PSPIdType")], df.iat[0,legend.FileLocations.index("Name")], df.iat[0,legend.FileLocations.index("NameType")]))
 
-    reportedPayee.addChild(buildDocSpec(df.iat[0,legend.FileLocations.index("DocTypeIndic")]))
+    reportedPayee.addChild(buildDocSpec(df.iat[0,legend.__fieldOrder__.index("DocTypeIndic")]))
 
-    reportedPayee.addChild(xmlBuilder.MtElement.MtElement())
+    reportedPayee.addChild('')
 
     return reportedPayee
 
@@ -238,22 +233,6 @@ def buildNLMsgSpec(MessageTypeIndic, countryMS, quarter, year):
         for j in i.children:
             if isinstance(j, xmlBuilder.XmlElement.XmlElement):
                 j.setTag("cesop:" + j.getTag())
-
-    # msgSpec.insertChild(xmlBuilder.XmlElement.XmlElement("CorrMessageRefId", "", True), 4)
-
-    # sendingPSP = xmlBuilder.XmlElement.XmlElement("SendingPSP")
-
-    # pspID = xmlBuilder.XmlElement.XmlElement("PSPId", globals.__sendingPSPID__, True)
-    # pspID.updateAttrib("PSPIdType", globals.__sendingPSPID__)
-
-    # name = xmlBuilder.XmlElement.XmlElement("Name", globals.__sendingPSPName__, True)
-    # name.updateAttrib("NameType", globals.__sendingPSPNameType__)
-
-    # sendingPSP.addChildren([pspID, name])
-
-    # msgSpec.insertChild(sendingPSP, 5)
-
-    # sendingPSP.addChild
 
     return msgSpec
 

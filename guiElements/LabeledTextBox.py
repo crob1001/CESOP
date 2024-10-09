@@ -33,6 +33,7 @@ class LabeledTextBox:
         return self.container
     
     def getInputText(self):
+        
         if (self.textField.toPlainText() != ""):
             return self.textField.toPlainText()
         else:

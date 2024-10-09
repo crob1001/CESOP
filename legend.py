@@ -1,6 +1,7 @@
 __author__ = "Christian Roberts"
 
-FileLocations = [
+global __fieldOrder__
+__fieldOrder__ = [
     "TransmittingCountry",
     "PayeeName",
     "PayeeNameType",

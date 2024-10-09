@@ -6,7 +6,6 @@ __author__ = "Christian Roberts"
 class XmlSchema:
 
     def __init__(self):
-        # self.fileName = ""
         self.prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         self.content = {}
 
@@ -22,6 +21,8 @@ class XmlSchema:
         
     def __str__(self) -> str:
         out = f"{self.prolog}"
+
         for i in self.content:
             out = f"{out}{self.content[i].__str__()}"
+            
         return out

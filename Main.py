@@ -5,13 +5,6 @@ import gui
 __author__ = "Christian Roberts"
 
 if __name__ == '__main__':
-    # temp = xmlBuilder.XmlElement.XmlElement()
-    # temp.getAttribValue("test")
-    # builder.BuildPreHeader()
-    # builder.buildLTRoot()
-    # print(builder.lines)
-    
-
     sys.exit(gui.runGui())
     print(">>> 1: Gui    2: NoGui    3: Quit")
     while(True):

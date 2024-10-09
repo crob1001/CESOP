@@ -7,6 +7,7 @@ class fileHandlerWidget:
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
+
         self.addFile = QPushButton()
         self.addFile.setText("Add")
         self.addFile.clicked.connect(self.addItem)
@@ -16,13 +17,8 @@ class fileHandlerWidget:
         self.fileList = QListWidget()
         self.container = QWidget()
 
-        # container = QWidget(self)
+
         self.container.setLayout(QGridLayout())
-        # self.container.setMaximumSize(200, 50)
-
-        # self.label.setAlignment()
-
-        # self.label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
 
         self.container.layout().addWidget(self.addFile, 0, 0, 1, 1)
         self.container.layout().addWidget(self.removeFile, 1, 0, 1, 1)
@@ -31,24 +27,11 @@ class fileHandlerWidget:
     def addItem(self):
         filename, _ = QFileDialog.getOpenFileName()
         if filename:
-            # path = Path(filename)
-            # self.text_edit.setText(self.path.read_text())
-            # self.set_title(filename)
             self.fileList.addItem(filename)
 
     def removeItem(self):
         for item in self.fileList.selectedItems():
             self.fileList.takeItem(self.fileList.row(item))
-
-    # def setFields(self, topBttn, botmBttn):
-    #     self.label.setText(labelText)
-
-    #     self.combo.addItems(selectionList)
-        
-    #     self.combo.currentIndexChanged.connect(self.setIndex)
-
-    # def setIndex(self, i):
-    #     self.index = i
         
     def getWidget(self):
         return self.container

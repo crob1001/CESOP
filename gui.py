@@ -13,11 +13,7 @@ import guiElements.fileHandlerWidget as fileHandlerWidget
 
 __author__ = "Christian Roberts"
 
-# @dataclass
-# class 
-
 LOGO_PATH = Path(sys.argv[0]).parent.absolute().__str__()+'/assets/logo.png'
-EXIT_ICON_PATH = Path(sys.argv[0]).parent.absolute().__str__()+'/assets/exit.png'
 
 app = QApplication(sys.argv)
 
@@ -56,14 +52,14 @@ class MainWindow(QMainWindow):
 
 
         self.MessageTypeIndic = LabeledComboBox.LabeledComboBox()
-        self.MessageTypeIndic.setFields("Message Indic:", globals.__MsgTypeIndic__.keys())
+        self.MessageTypeIndic.setFields("Message Indic:", globals.__msgTypeIndic__.keys())
 
         self.pspIdType = LabeledComboBox.LabeledComboBox()
-        self.pspIdType.setFields("PSPIdType:", globals.__pspIDType__.keys())
+        self.pspIdType.setFields("PSP Id Type:", globals.__pspIDType__.keys())
 
 
         self.name = LabeledTextBox.LabeledTextBox(400)
-        self.name.setFields("Company name:", "name", globals.__CompanyName__)
+        self.name.setFields("Sending PSP Name:", "name", globals.__sendingPSPName__)
 
         self.nameType = LabeledComboBox.LabeledComboBox()
         self.nameType.setFields("Name Type:", globals.__NameTypes__.keys())
@@ -114,26 +110,29 @@ class MainWindow(QMainWindow):
         return btn
 
     def build(self):
+
         builder.build(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
                     list(globals.__countries__.keys())[self.CountryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
                     self.pageNumInputBox.getInputText(), self.pageTotalInputBox.getInputText(),
-                    list(globals.__MsgTypeIndic__.keys())[self.MessageTypeIndic.getindex()],
+                    list(globals.__msgTypeIndic__.keys())[self.MessageTypeIndic.getindex()],
                     list(globals.__pspIDType__.keys())[self.pspIdType.getindex()], self.name.getInputText(),
                     list(globals.__NameTypes__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
                     )
 
     def createContainer(self):
+
         container = QWidget(self)
         container.setLayout(QGridLayout())
-        # container.setContentsMargins(5, 5, 5, 5)
+
         return container
 
     def initMenuBar(self):
+
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu('&File')
-        # exit menu item
+
         fileMenu.addSeparator()
-        exitAction = QAction(QIcon(EXIT_ICON_PATH), '&Exit', self)
+        exitAction = QAction(QIcon(), '&Exit', self)
         exitAction.setStatusTip('Exit')
         exitAction.setShortcut('Alt+F4')
         exitAction.triggered.connect(self.quit)
@@ -148,7 +147,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def quit(self):
-        # if self.confirm_save():
+
         self.destroy()
         app.quit()
         self.close()
