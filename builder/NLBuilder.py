@@ -2,6 +2,8 @@ import globals
 import builder.defaultBuilder
 from xmlBuilder import XmlElement
 
+__author__ = "Christian Roberts"
+
 def buildPSPNL() -> XmlElement:
     pspNL = XmlElement.XmlElement("pspnl:PSPNL")
     pspNL.updateAttrib("xmlns:cm", "urn:eu:taxud:commontypes:v1")

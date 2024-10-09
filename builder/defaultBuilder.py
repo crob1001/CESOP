@@ -6,6 +6,8 @@ import legend
 import globals
 from xmlBuilder import XmlElement
 
+__author__ = "Christian Roberts"
+
 def buildReportingPSP(pspId, pspIdType, name, nameType):
     reportingPSP = XmlElement.XmlElement("ReportingPSP")
 
