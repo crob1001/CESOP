@@ -101,8 +101,6 @@ class MainWindow(QMainWindow):
 
         mainContainer.layout().addWidget(self.tempBtn(), 12, 5)
 
-        # mainContainer.layout().addWidget(self.tempTempBtn(), 13, 5)
-
     def tempBtn(self):
         btn = QPushButton()
         btn.setText("Generate")

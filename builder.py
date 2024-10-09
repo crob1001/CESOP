@@ -144,8 +144,6 @@ def buildReportedPayee(df, countryMS):
     TAXId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByTAX")])
     TAXId.updateAttrib("type", df.iat[0,legend.__fieldOrder__.index("typeTAX")])
 
-    # taxIdentification.addChildren([VATId, TAXId])
-
     reportedPayee.addChildren([name, country, address#, emailAddress, webPage
                                ,taxIdentification])
 
