@@ -92,6 +92,7 @@ def buildPaymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
         for countryCode, payeeName in dfs:
             group = dfs.get_group(countryCode)
             paymentDataBody.addChild(buildReportedPayee(group, countryMS))
+            paymentDataBody.addChild('')
 
     return paymentDataBody
 
@@ -170,8 +171,6 @@ def buildReportedPayee(df, countryMS):
 
 
     reportedPayee.addChild(buildDocSpec(df.iat[0,legend.__fieldOrder__.index("DocTypeIndic")]))
-
-    reportedPayee.addChild('')
 
     return reportedPayee
 

@@ -15,7 +15,6 @@ __pspID__ = ""
 global __sendingPSPName__
 __sendingPSPName__ = ""
 
-
 global __RSIN__
 __RSIN__ = ""
 
