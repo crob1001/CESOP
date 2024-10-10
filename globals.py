@@ -1,7 +1,7 @@
 __author__ = "Christian Roberts"
 
 global __version__
-__version__ = "0.2.0"
+__version__ = "0.6.2"
 
 global __xmlVersion__
 __xmlVersion__ = "1.0"

@@ -1,9 +1,11 @@
 #xml version 1.0
 #UTF-8 encoding
 
+from xmlSchema import xmlElement
+
 __author__ = "Christian Roberts"
 
-class XmlSchema:
+class xmlSchema:
 
     def __init__(self):
         self.prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -23,6 +25,6 @@ class XmlSchema:
         out = f"{self.prolog}"
 
         for i in self.content:
-            out = f"{out}{self.content[i].__str__()}"
+            out = out + self.content[i].__str__()
             
         return out

@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QAction, QLabel, QPushButton
 
 import globals
-from builder import builderMain
+from reportBuilder import main
 from guiElements import SeperatingLine, LabeledTextBox, LabeledComboBox, fileHandlerWidget
 
 __author__ = "Christian Roberts"
@@ -32,8 +32,8 @@ class MainWindow(QMainWindow):
         self.quarterComboBox = LabeledComboBox.LabeledComboBox()
         self.quarterComboBox.setFields("Quarter:", globals.__quarters__.keys())
 
-        self.CountryComboBox = LabeledComboBox.LabeledComboBox()
-        self.CountryComboBox.setFields("Country Code:", globals.__countries__.keys())
+        self.countryComboBox = LabeledComboBox.LabeledComboBox()
+        self.countryComboBox.setFields("Country Code:", globals.__countries__.keys())
 
         self.yearInputBox = LabeledTextBox.LabeledTextBox()
         self.yearInputBox.setFields("Year:", "YYYY", str(datetime.date.today().year))
@@ -48,8 +48,8 @@ class MainWindow(QMainWindow):
         self.pageTotalInputBox.setFields("Total Pages:", "1")
 
 
-        self.MessageTypeIndic = LabeledComboBox.LabeledComboBox()
-        self.MessageTypeIndic.setFields("Message Indic:", globals.__msgTypeIndic__.keys())
+        self.messageTypeIndic = LabeledComboBox.LabeledComboBox()
+        self.messageTypeIndic.setFields("Message Indic:", globals.__msgTypeIndic__.keys())
 
         self.pspIdType = LabeledComboBox.LabeledComboBox()
         self.pspIdType.setFields("PSP Id Type:", globals.__pspIDType__.keys())
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         mainContainer.layout().addWidget(SeperatingLine.SeperatingLine().getWidget(), 0, 0, 1, 6)
 
         mainContainer.layout().addWidget(self.quarterComboBox.getWidget(), 1, 0)
-        mainContainer.layout().addWidget(self.CountryComboBox.getWidget(), 1, 1)
+        mainContainer.layout().addWidget(self.countryComboBox.getWidget(), 1, 1)
         mainContainer.layout().addWidget(self.yearInputBox.getWidget(), 1, 2)
         mainContainer.layout().addWidget(self.pspIDInputBox.getWidget(), 1, 3)
         mainContainer.layout().addWidget(self.pageNumInputBox.getWidget(), 1, 4)
@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
 
         mainContainer.layout().addWidget(SeperatingLine.SeperatingLine().getWidget(), 2, 0, 1, 6)
 
-        mainContainer.layout().addWidget(self.MessageTypeIndic.getWidget(), 3, 0)
+        mainContainer.layout().addWidget(self.messageTypeIndic.getWidget(), 3, 0)
         mainContainer.layout().addWidget(QLabel("CESOP100: The message contains new data.\n"+
                                                 "CESOP101: The message contains corrections or deletions of previously sent data.\n"+
                                                 "CESOP102: The message indicates there is no data to report."), 3, 1, 1,3)
@@ -106,10 +106,10 @@ class MainWindow(QMainWindow):
 
     def build(self):
 
-        builderMain.build(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
-                    list(globals.__countries__.keys())[self.CountryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
+        main.build(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
+                    list(globals.__countries__.keys())[self.countryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
                     self.pageNumInputBox.getInputText(), self.pageTotalInputBox.getInputText(),
-                    list(globals.__msgTypeIndic__.keys())[self.MessageTypeIndic.getindex()],
+                    list(globals.__msgTypeIndic__.keys())[self.messageTypeIndic.getindex()],
                     list(globals.__pspIDType__.keys())[self.pspIdType.getindex()], self.name.getInputText(),
                     list(globals.__NameTypes__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
                     )

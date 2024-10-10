@@ -2,7 +2,7 @@ import textwrap
 
 __author__ = "Christian Roberts"
 
-class XmlElement:
+class xmlElement:
 
     def __init__(self, tag, child = None, inline = False):
 
@@ -34,7 +34,7 @@ class XmlElement:
         if(False == self.inline):
             out = f"{out}>\n"
             for i in self.children:
-                if (isinstance(i, XmlElement)):
+                if (isinstance(i, xmlElement)):
                     out = out + textwrap.indent(i.__str__(), '\t')
                 else:
                     out = out + textwrap.indent(str(i), '\t') + "\n"
@@ -42,7 +42,7 @@ class XmlElement:
         else:
             out = f"{out}>"
             for i in self.children:
-                if (isinstance(i, XmlElement)):
+                if (isinstance(i, xmlElement)):
                     i.setInline(True)
                     out = out + i.__str__().rstrip('\n')
                 else:
