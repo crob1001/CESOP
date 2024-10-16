@@ -90,15 +90,13 @@ def reportedPayee(df, countryMS):
 
     country = xmlElement.xmlElement("Country", df.iat[-1,legend.__fieldOrder__.index("CountryCode")], True)
 
-    address = xmlElement.xmlElement("Address", None)
-
     match(countryMS):
         
         case "NL" :
-            netherlands.NLAddress(address, countryMS, df)
+            address = netherlands.NLAddress(df)
         
         case _ :
-            default.address(address, countryMS, df)  
+            address = default.address(df)  
 
     taxIdentification = xmlElement.xmlElement("TAXIdentification", None, False)
 

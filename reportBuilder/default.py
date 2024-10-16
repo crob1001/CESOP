@@ -5,12 +5,31 @@ from reportBuilder import sharedFuncts
 
 __author__ = "Christian Roberts"
 
-def address(address, countryMS, df):
+def address(df):
+
+    addresslist = ["Street", 
+                   "BuildingIdentifier", 
+                   "SuiteIdentifier", 
+                   "FloorIdentifier",
+                   "DistrictName", 
+                   "POB", 
+                   "PostCode", 
+                   "City", 
+                   "CountrySubentity"]
+    
+    address = xmlElement.xmlElement("Address")
     address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
-    address.addChild(xmlElement.xmlElement(
-        "AddressFree",
-        (" ".join(f'{df.iat[-1,legend.__fieldOrder__.index("Street")]} {df.iat[0,legend.__fieldOrder__.index("BuildingIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("SuiteIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("FloorIdentifier")]} {df.iat[0,legend.__fieldOrder__.index("DistrictName")]} {df.iat[0,legend.__fieldOrder__.index("POB")]} {df.iat[0,legend.__fieldOrder__.index("PostCode")]} {df.iat[0,legend.__fieldOrder__.index("City")]} {df.iat[0,legend.__fieldOrder__.index("CountrySubentity")]}'.split()))
-        ))
+
+    addressFix = xmlElement.xmlElement("AddressFix")
+
+    for i in addresslist:
+        cell = df.iat[-1,legend.__fieldOrder__.index(i)]
+        addressFix.addChild(xmlElement.xmlElement(i, str(cell), True))
+
+    address.addChild(addressFix)
+
+    return address
+    
     
 def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
     cesop = xmlElement.xmlElement("CESOP")
