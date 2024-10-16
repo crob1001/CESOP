@@ -7,7 +7,7 @@ __author__ = "Christian Roberts"
 
 def NLAddress(address, countryMS, df):
     address.setInline(False)
-    address.updateAttrib("LegalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
+    address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ', ))
 
     countryCode = xmlElement.xmlElement("cm:CountryCode", countryMS, True)
     addressFix = xmlElement.xmlElement("cm:AddressFix", None, False)

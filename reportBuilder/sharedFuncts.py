@@ -3,6 +3,7 @@ from uuid import uuid4
 from datetime import datetime
 
 import legend
+import globals
 from xmlSchema import xmlElement
 from reportBuilder import default, netherlands
 
@@ -15,7 +16,7 @@ def representative(representativeId, pspIdType, name, nameType):
     representativeId.updateAttrib("PSPIdType", pspIdType)
 
     name = xmlElement.xmlElement("Name", name, True)
-    name.updateAttrib("NameType", nameType)
+    name.updateAttrib("nameType", nameType)
 
     representative.addChildren([representativeId, name])
 
@@ -26,11 +27,11 @@ def msgSpec(messageTypeIndic, transmittingCountry, quarter, year):
 
     transmitingCountry = xmlElement.xmlElement("TransmittingCountry", transmittingCountry, True)
     msgType = xmlElement.xmlElement("MessageType", "PMT", True)
-    messageTypeIndic = xmlElement.xmlElement("messageTypeIndic", messageTypeIndic, True)
+    messageTypeIndic = xmlElement.xmlElement("MessageTypeIndic", messageTypeIndic, True)
     MessageRefId = xmlElement.xmlElement("MessageRefId", uuid4(), True)
     ReportingPeriod = xmlElement.xmlElement("ReportingPeriod")
 
-    ReportingPeriod.addChildren([xmlElement.xmlElement("Quarter", quarter, True),
+    ReportingPeriod.addChildren([xmlElement.xmlElement("Quarter", list(globals.__quarters__.keys()).index(quarter) + 1, True),
                                  xmlElement.xmlElement("Year", year, True)])
     
     Timestamp = xmlElement.xmlElement("Timestamp", datetime.today().strftime('%Y-%m-%dT%H:%M:%SZ'), True)
@@ -85,11 +86,11 @@ def reportedPayee(df, countryMS):
     reportedPayee = xmlElement.xmlElement("ReportedPayee")
 
     name = xmlElement.xmlElement("Name", df.iat[-1,legend.__fieldOrder__.index("PayeeName")], True)
-    name.updateAttrib("NameType", df.iat[-1,legend.__fieldOrder__.index("PayeeNameType")])
+    name.updateAttrib("nameType", df.iat[-1,legend.__fieldOrder__.index("PayeeNameType")].upper())
 
     country = xmlElement.xmlElement("Country", df.iat[-1,legend.__fieldOrder__.index("CountryCode")], True)
 
-    address = xmlElement.xmlElement("Address", None, True)
+    address = xmlElement.xmlElement("Address", None)
 
     match(countryMS):
         
@@ -153,7 +154,7 @@ def reportingPSP(pspId, pspIdType, name, nameType):
     pspId.updateAttrib("PSPIdType", pspIdType)
 
     name = xmlElement.xmlElement("Name", name, True)
-    name.updateAttrib("NameType", nameType)
+    name.updateAttrib("nameType", nameType)
 
     reportingPSP.addChildren([pspId, name])
 
