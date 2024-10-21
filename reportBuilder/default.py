@@ -5,7 +5,7 @@ from reportBuilder import sharedFuncts
 
 __author__ = "Christian Roberts"
 
-def address(df):
+def address(df, countryMS):
 
     addresslist = ["Street", 
                    "BuildingIdentifier", 
@@ -16,28 +16,31 @@ def address(df):
                    "PostCode", 
                    "City", 
                    "CountrySubentity"]
-    
-    address = xmlElement.xmlElement("Address")
-    address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
 
-    addressFix = xmlElement.xmlElement("AddressFix")
+    countryCode = xmlElement.xmlElement("CountryCode", "cm", countryMS, True)
 
+    addressFree = xmlElement.xmlElement("AddressFree", "cm", None, True)
+
+    child = ""
     for i in addresslist:
         cell = df.iat[-1,legend.__fieldOrder__.index(i)]
-        addressFix.addChild(xmlElement.xmlElement(i, str(cell), True))
+        child = f"{child} {str(cell)}"
 
-    address.addChild(addressFix)
+    addressFree.addChild(" ".join(child.split()))
+
+    address = xmlElement.xmlElement("Address", "cesop")
+    address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
+    address.addChildren([countryCode, addressFree])
 
     return address
     
-    
 def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
-    cesop = xmlElement.xmlElement("CESOP")
-    cesop.updateAttrib("version", globals.__cesopVersion__)
+    cesop = xmlElement.xmlElement("CESOP", "cesop")
 
-    cesop.addChildren([sharedFuncts.msgSpec(messageTypeIndic, countryMS, quarter, year),
-                        paymentDataBody])
-    
-    cesop.updateAttrib("xmlns", f"urn:ec.europa.eu:taxud:fiscalis:cesop:v{globals.__xmlVersion__.split('.')[0]}")
+    cesop.addChildren([sharedFuncts.msgSpec(messageTypeIndic, countryMS, quarter, year), paymentDataBody])
+
+    cesop.updateAttrib("xmlns:cm", f"urn:eu:taxud:commontypes:v{globals.__COMMON_TYPES_V__}")
+    cesop.updateAttrib("xmlns:cesop", f"urn:ec.europa.eu:taxud:fiscalis:cesop:v{globals.__FISCALIS_CESOP_V__}")
+    cesop.updateAttrib("version", globals.__cesopVersion__)
 
     return cesop

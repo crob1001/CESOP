@@ -1,13 +1,19 @@
 __author__ = "Christian Roberts"
 
 global __version__
-__version__ = "0.6.4"
+__version__ = "0.6.5"
 
 global __xmlVersion__
 __xmlVersion__ = "1.0"
 
 global __cesopVersion__
 __cesopVersion__ = "4.02"
+
+global __COMMON_TYPES_V__
+__COMMON_TYPES_V__ = 1
+
+global __FISCALIS_CESOP_V__
+__FISCALIS_CESOP_V__ = 1
 
 global __pspID__
 __pspID__ = ""
