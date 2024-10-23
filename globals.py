@@ -1,7 +1,7 @@
 __author__ = "Christian Roberts"
 
 global __VERSION__
-__VERSION__ = "0.7.0"
+__VERSION__ = "0.8.0"
 
 global __XML_VERSION__
 __XML_VERSION__ = "1.0"
@@ -27,7 +27,11 @@ __RSIN__ = ""
 global __KVK__ 
 __KVK__ = ""
 
-global __
+global __OPTIONALS__
+__OPTIONALS__ = {
+    "VATID" : False,
+    "TAXID" : True
+}
 
 global __QUARTERS__ 
 __QUARTERS__ = {

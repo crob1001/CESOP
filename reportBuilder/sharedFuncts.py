@@ -77,6 +77,8 @@ def reportedPayee(df, countryMS):
 
     country = xmlElement.xmlElement("Country", "cesop", df.iat[-1,legend.__fieldOrder__.index("CountryCode")], True)
 
+    taxIdentification = xmlElement.xmlElement("TAXIdentification", "cesop")
+
     match(countryMS):
         
         case "NL" :
@@ -85,16 +87,17 @@ def reportedPayee(df, countryMS):
         case _ :
             address = default.address(df, countryMS)  
 
-    VATId = xmlElement.xmlElement("VATId", "cesop", df.iat[0,legend.__fieldOrder__.index("VATId")],True)
-    VATId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByVAT")])
-    VATId.addChild(df.iat[-1,legend.__fieldOrder__.index("VATId")])
+    if globals.__OPTIONALS__["VATID"]:
+        VATId = xmlElement.xmlElement("VATId", "cesop", df.iat[0,legend.__fieldOrder__.index("VATId")],True)
+        VATId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByVAT")])
+        VATId.addChild(df.iat[-1,legend.__fieldOrder__.index("VATId")])
+        taxIdentification.addChild(VATId)
 
-    TAXId = xmlElement.xmlElement("TAXId", None, df.iat[-1,legend.__fieldOrder__.index("TAXId")], True)
-    TAXId.updateAttrib("issuedBy", df.iat[-1,legend.__fieldOrder__.index("issuedByTAX")])
-    TAXId.updateAttrib("type", df.iat[-1,legend.__fieldOrder__.index("typeTAX")])
-
-    taxIdentification = xmlElement.xmlElement("TAXIdentification", "cesop")
-    taxIdentification.addChildren([VATId])
+    if globals.__OPTIONALS__["TAXID"]:
+        TAXId = xmlElement.xmlElement("TAXId", None, df.iat[-1,legend.__fieldOrder__.index("TAXId")], True)
+        TAXId.updateAttrib("issuedBy", df.iat[-1,legend.__fieldOrder__.index("issuedByTAX")])
+        TAXId.updateAttrib("type", df.iat[-1,legend.__fieldOrder__.index("typeTAX")])
+        taxIdentification.addChild(TAXId)
 
     reportedPayee.addChildren([name, country, address#, emailAddress, webPage
                                ,taxIdentification])

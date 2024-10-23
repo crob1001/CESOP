@@ -119,18 +119,33 @@ class MainWindow(QMainWindow):
         container.setLayout(QGridLayout())
 
         return container
+    
+    def toggleVat(self):
+        globals.__OPTIONALS__["VATID"] = not globals.__OPTIONALS__["VATID"]
 
-    def initMenuBar(self):
-
-        menuBar = self.menuBar()
-        fileMenu = menuBar.addMenu('&File')
-
-        fileMenu.addSeparator()
+    #seperate menu or Qactions out into new class for better readability of this and initMenuBar funts
+    def exitAction(self):
         exitAction = QAction(QIcon(), '&Exit', self)
         exitAction.setStatusTip('Exit')
         exitAction.setShortcut('Alt+F4')
         exitAction.triggered.connect(self.quit)
-        fileMenu.addAction(exitAction)
+
+        return exitAction
+
+    def initMenuBar(self):
+        vatId = QAction('Include VatId', self, checkable=True)
+        vatId.setStatusTip('Include VatId')
+        vatId.setChecked(False)
+        vatId.triggered.connect(self.toggleVat)
+
+        menuBar = self.menuBar()
+
+        fileMenu = menuBar.addMenu('&File')
+        fileMenu.addSeparator()
+        fileMenu.addAction(self.exitAction())
+
+        optionalMenu = menuBar.addMenu('&Optional')
+        optionalMenu.addAction(vatId)
 
         abtMenu = menuBar.addMenu('&About')
         abtMenu.addAction(QAction("Software Version: " + globals.__VERSION__, self))
