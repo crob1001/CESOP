@@ -67,7 +67,7 @@ def addCesopToTag(element):
 
 def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
     cesop = xmlElement.xmlElement("pspnl:CESOP")
-    cesop.updateAttrib("version", globals.__cesopVersion__)
+    cesop.updateAttrib("version", globals.__CESOP_VERSION__)
 
     pspNL = PSPNL()
 

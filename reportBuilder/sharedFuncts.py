@@ -23,16 +23,17 @@ def representative(representativeId, pspIdType, name, nameType):
     return representative
 
 def docSpec(docTypeIndic):
-    docSpec = xmlElement.xmlElement("DocSpec")
-    docTypeIndic = xmlElement.xmlElement("DocTypeIndic", docTypeIndic, True)
-    docRefID = xmlElement.xmlElement("DocRefID", uuid4(), True)
+    docTypeIndic = xmlElement.xmlElement("DocTypeIndic", "cm", docTypeIndic, True)
+    docRefID = xmlElement.xmlElement("DocRefId", "cm", uuid4(), True)
+
+    docSpec = xmlElement.xmlElement("DocSpec", "cesop")
     docSpec.addChildren([docTypeIndic, docRefID])
     return docSpec
 
 def paymentMethod(paymentMethodType):
     paymentMethodType = xmlElement.xmlElement("PaymentMethodType", "cm", paymentMethodType, True)
 
-    paymentMethod = xmlElement.xmlElement("PaymentMethod", "cm", paymentMethodType)
+    paymentMethod = xmlElement.xmlElement("PaymentMethod", "cesop", paymentMethodType)
 
     return paymentMethod
 
@@ -51,9 +52,10 @@ def reportedTransaction(transactionIdentifier, dateTime, isRefund, transactionDa
     amount = xmlElement.xmlElement("Amount", "cesop", amount, True)
     amount.updateAttrib("currency", currency)
 
-    initiatedAtPhysicalPremisesOfMerchant = xmlElement.xmlElement("InitiatedAtPhysicalPremisesOfMerchant", "cesop", initiatedAtPhysicalPremisesOfMerchant, True)
+    initiatedAtPhysicalPremisesOfMerchant = xmlElement.xmlElement("InitiatedAtPhysicalPremisesOfMerchant", "cesop", initiatedAtPhysicalPremisesOfMerchant.lower(), True)
 
     payerMS = xmlElement.xmlElement("PayerMS", "cesop", payerMS, True)
+    if (payerMSSource not in globals.__PAYER_MS_SOURCE__): payerMSSource = "Other" 
     payerMS.updateAttrib("PayerMSSource", payerMSSource)
 
     # pspRoleType = xmlElement.xmlElement("PSPRoleType", pspRole, True)
@@ -87,9 +89,9 @@ def reportedPayee(df, countryMS):
     VATId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByVAT")])
     VATId.addChild(df.iat[-1,legend.__fieldOrder__.index("VATId")])
 
-    # TAXId = xmlElement.xmlElement("TAXId", None, df.iat[-1,legend.__fieldOrder__.index("TAXId")], True)
-    # TAXId.updateAttrib("issuedBy", df.iat[-1,legend.__fieldOrder__.index("issuedByTAX")])
-    # TAXId.updateAttrib("type", df.iat[-1,legend.__fieldOrder__.index("typeTAX")])
+    TAXId = xmlElement.xmlElement("TAXId", None, df.iat[-1,legend.__fieldOrder__.index("TAXId")], True)
+    TAXId.updateAttrib("issuedBy", df.iat[-1,legend.__fieldOrder__.index("issuedByTAX")])
+    TAXId.updateAttrib("type", df.iat[-1,legend.__fieldOrder__.index("typeTAX")])
 
     taxIdentification = xmlElement.xmlElement("TAXIdentification", "cesop")
     taxIdentification.addChildren([VATId])
@@ -122,8 +124,8 @@ def reportedPayee(df, countryMS):
     while i < len(df.index):
         reportedPayee.addChild(reportedTransaction(df.iat[i,legend.__fieldOrder__.index("TransactionIdentifier")], df.iat[i,legend.__fieldOrder__.index("DateTime")],
                                                         df.iat[i,legend.__fieldOrder__.index("IsRefund")], df.iat[i,legend.__fieldOrder__.index("transactionDateType")],
-                                                        df.iat[i,legend.__fieldOrder__.index("Amount")], df.iat[i,legend.__fieldOrder__.index("currency")],
-                                                        df.iat[i,legend.__fieldOrder__.index("PaymentMethodType")], df.iat[i,legend.__fieldOrder__.index("InitiatedAtPhysicalPremisesOfMerchant")],
+                                                        '{:.2f}'.format(df.iat[i,legend.__fieldOrder__.index("Amount")]), df.iat[i,legend.__fieldOrder__.index("currency")],
+                                                        df.iat[i,legend.__fieldOrder__.index("PaymentMethodType")], str(df.iat[i,legend.__fieldOrder__.index("InitiatedAtPhysicalPremisesOfMerchant")]).lower(),
                                                         df.iat[i,legend.__fieldOrder__.index("PayerMS")], df.iat[i,legend.__fieldOrder__.index("PayerMSSource")],
                                                         df.iat[i,legend.__fieldOrder__.index("PSPRoleType")]))
         i += 1
@@ -158,7 +160,7 @@ def paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
 
         for countryCode, payeeName in dfs:
             paymentDataBody.addChild(reportedPayee(dfs.get_group(countryCode), countryMS))
-            paymentDataBody.addChild('')
+            # paymentDataBody.addChild('')
 
     return paymentDataBody
 
@@ -172,7 +174,7 @@ def msgSpec(messageTypeIndic, transmittingCountry, quarter, year):
     MessageRefId = xmlElement.xmlElement("MessageRefId", "cesop", uuid4(), True)
 
     ReportingPeriod = xmlElement.xmlElement("ReportingPeriod", "cesop")
-    ReportingPeriod.addChildren([xmlElement.xmlElement("Quarter", "cesop", list(globals.__quarters__.keys()).index(quarter) + 1, True),
+    ReportingPeriod.addChildren([xmlElement.xmlElement("Quarter", "cesop", list(globals.__QUARTERS__.keys()).index(quarter) + 1, True),
                                  xmlElement.xmlElement("Year", "cesop", year, True)])
     
     Timestamp = xmlElement.xmlElement("Timestamp", "cesop", datetime.today().strftime('%Y-%m-%dT%H:%M:%SZ'), True)

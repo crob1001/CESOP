@@ -41,6 +41,6 @@ def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
 
     cesop.updateAttrib("xmlns:cm", f"urn:eu:taxud:commontypes:v{globals.__COMMON_TYPES_V__}")
     cesop.updateAttrib("xmlns:cesop", f"urn:ec.europa.eu:taxud:fiscalis:cesop:v{globals.__FISCALIS_CESOP_V__}")
-    cesop.updateAttrib("version", globals.__cesopVersion__)
+    cesop.updateAttrib("version", globals.__CESOP_VERSION__)
 
     return cesop

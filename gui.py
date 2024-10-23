@@ -30,16 +30,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(mainContainer)
 
         self.quarterComboBox = LabeledComboBox.LabeledComboBox()
-        self.quarterComboBox.setFields("Quarter:", globals.__quarters__.keys())
+        self.quarterComboBox.setFields("Quarter:", globals.__QUARTERS__.keys())
 
         self.countryComboBox = LabeledComboBox.LabeledComboBox()
-        self.countryComboBox.setFields("Country Code:", globals.__countries__.keys())
+        self.countryComboBox.setFields("Country Code:", globals.__COUNTRIES__.keys())
 
         self.yearInputBox = LabeledTextBox.LabeledTextBox()
         self.yearInputBox.setFields("Year:", "YYYY", str(datetime.date.today().year))
 
         self.pspIDInputBox = LabeledTextBox.LabeledTextBox() 
-        self.pspIDInputBox.setFields("pspID:", "pspID", globals.__pspID__)
+        self.pspIDInputBox.setFields("pspID:", "pspID", globals.__PSP_ID__)
 
         self.pageNumInputBox = LabeledTextBox.LabeledTextBox()
         self.pageNumInputBox.setFields("Page Num:", "1")
@@ -49,17 +49,17 @@ class MainWindow(QMainWindow):
 
 
         self.messageTypeIndic = LabeledComboBox.LabeledComboBox()
-        self.messageTypeIndic.setFields("Message Indic:", globals.__msgTypeIndic__.keys())
+        self.messageTypeIndic.setFields("Message Indic:", globals.__MSG_TYPE_INDIC__.keys())
 
         self.pspIdType = LabeledComboBox.LabeledComboBox()
-        self.pspIdType.setFields("PSP Id Type:", globals.__pspIDType__.keys())
+        self.pspIdType.setFields("PSP Id Type:", globals.__PSP_ID_TYPE__.keys())
 
 
         self.name = LabeledTextBox.LabeledTextBox(400)
-        self.name.setFields("Sending PSP Name:", "name", globals.__sendingPSPName__)
+        self.name.setFields("Sending PSP Name:", "name", globals.__SENDING_PSP_NAME__)
 
         self.nameType = LabeledComboBox.LabeledComboBox()
-        self.nameType.setFields("Name Type:", globals.__NameTypes__.keys())
+        self.nameType.setFields("Name Type:", globals.__NAME_TYPES__.keys())
 
         
         self.fileHandler = fileHandlerWidget.fileHandlerWidget()
@@ -105,12 +105,12 @@ class MainWindow(QMainWindow):
         return btn
 
     def build(self):
-        main.main(list(globals.__quarters__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
-                    list(globals.__countries__.keys())[self.countryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
+        main.main(list(globals.__QUARTERS__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
+                    list(globals.__COUNTRIES__.keys())[self.countryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
                     self.pageNumInputBox.getInputText(), self.pageTotalInputBox.getInputText(),
-                    list(globals.__msgTypeIndic__.keys())[self.messageTypeIndic.getindex()],
-                    list(globals.__pspIDType__.keys())[self.pspIdType.getindex()], self.name.getInputText(),
-                    list(globals.__NameTypes__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
+                    list(globals.__MSG_TYPE_INDIC__.keys())[self.messageTypeIndic.getindex()],
+                    list(globals.__PSP_ID_TYPE__.keys())[self.pspIdType.getindex()], self.name.getInputText(),
+                    list(globals.__NAME_TYPES__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
                     )
 
     def createContainer(self):
@@ -133,8 +133,8 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(exitAction)
 
         abtMenu = menuBar.addMenu('&About')
-        abtMenu.addAction(QAction("Software Version: "+globals.__version__, self))
-        abtMenu.addAction(QAction("Software Version: "+globals.__cesopVersion__, self))
+        abtMenu.addAction(QAction("Software Version: " + globals.__VERSION__, self))
+        abtMenu.addAction(QAction("Software Version: " + globals.__CESOP_VERSION__, self))
 
         # status bar
         self.status_bar = self.statusBar()
