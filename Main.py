@@ -1,7 +1,7 @@
 import sys
-import gui
+from gui import MainWindow
 
 __author__ = "Christian Roberts"
 
 if __name__ == '__main__':
-    sys.exit(gui.runGui())
+    sys.exit(MainWindow.runGui())

@@ -1,12 +1,13 @@
 import sys
 import datetime
+from gui import toggle
 from pathlib import Path
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QAction, QLabel, QPushButton
 
 import globals
 from reportBuilder import main
-from guiElements import SeperatingLine, LabeledTextBox, LabeledComboBox, fileHandlerWidget
+from gui import SeperatingLine, LabeledTextBox, LabeledComboBox, fileHandlerWidget, menuActions, toggle
 
 __author__ = "Christian Roberts"
 
@@ -26,7 +27,8 @@ class MainWindow(QMainWindow):
 
         self.initMenuBar()
 
-        mainContainer = self.createContainer()
+        mainContainer = QWidget(self)
+        mainContainer.setLayout(QGridLayout())
         self.setCentralWidget(mainContainer)
 
         self.quarterComboBox = LabeledComboBox.LabeledComboBox()
@@ -96,9 +98,9 @@ class MainWindow(QMainWindow):
 
         mainContainer.layout().addWidget(SeperatingLine.SeperatingLine().getWidget(), 8, 0, 1, 6)
 
-        mainContainer.layout().addWidget(self.tempBtn(), 12, 5)
+        mainContainer.layout().addWidget(self.generateBtn(), 12, 5)
 
-    def tempBtn(self):
+    def generateBtn(self):
         btn = QPushButton()
         btn.setText("Generate")
         btn.clicked.connect(self.build)
@@ -113,45 +115,29 @@ class MainWindow(QMainWindow):
                     list(globals.__NAME_TYPES__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
                     )
 
-    def createContainer(self):
-
-        container = QWidget(self)
-        container.setLayout(QGridLayout())
-
-        return container
-    
-    def toggleVat(self):
-        globals.__OPTIONALS__["VATID"] = not globals.__OPTIONALS__["VATID"]
-
     #seperate menu or Qactions out into new class for better readability of this and initMenuBar funts
-    def exitAction(self):
-        exitAction = QAction(QIcon(), '&Exit', self)
-        exitAction.setStatusTip('Exit')
-        exitAction.setShortcut('Alt+F4')
-        exitAction.triggered.connect(self.quit)
-
-        return exitAction
 
     def initMenuBar(self):
-        vatId = QAction('Include VatId', self, checkable=True)
-        vatId.setStatusTip('Include VatId')
-        vatId.setChecked(False)
-        vatId.triggered.connect(self.toggleVat)
 
         menuBar = self.menuBar()
-
         fileMenu = menuBar.addMenu('&File')
-        fileMenu.addSeparator()
-        fileMenu.addAction(self.exitAction())
-
         optionalMenu = menuBar.addMenu('&Optional')
-        optionalMenu.addAction(vatId)
-
         abtMenu = menuBar.addMenu('&About')
+        
+        fileMenu.addSeparator()
+        fileMenu.addAction(menuActions.exitAction(self))
+
+        optionalMenu.addAction(menuActions.createToggleAction(self, "VatId", toggle.toggleVat))
+        optionalMenu.addSeparator()
+        optionalMenu.addAction(menuActions.createToggleAction(self, "TaxId", toggle.toggleTax))
+        optionalMenu.addSeparator()
+        optionalMenu.addAction(menuActions.createToggleAction(self, "Address_Fix", toggle.toggleAddressFix))
+        optionalMenu.addSeparator()
+        optionalMenu.addAction(menuActions.createToggleAction(self, "Address_Free", toggle.toggleAddressFree))
+
         abtMenu.addAction(QAction("Software Version: " + globals.__VERSION__, self))
         abtMenu.addAction(QAction("Software Version: " + globals.__CESOP_VERSION__, self))
 
-        # status bar
         self.status_bar = self.statusBar()
         self.show()
 

@@ -69,6 +69,48 @@ def reportedTransaction(transactionIdentifier, dateTime, isRefund, transactionDa
 
     return reportedTransaction
 
+def address(df, countryMS) -> xmlElement.xmlElement:
+
+    addresslist = ["Street", 
+                   "BuildingIdentifier", 
+                   "SuiteIdentifier", 
+                   "FloorIdentifier",
+                   "DistrictName", 
+                   "POB", 
+                   "PostCode", 
+                   "City", 
+                   "CountrySubentity"]
+
+    address = xmlElement.xmlElement("Address", "cesop")
+    address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ',''))
+
+    countryCode = xmlElement.xmlElement("CountryCode", "cm", countryMS, True)
+    address.addChild(countryCode)
+
+    if globals.__OPTIONAL__["ADDRESS_FIX"]:
+        addressFix = xmlElement.xmlElement("AddressFix", "cm", None)
+
+        for i in addresslist:
+            cell = df.iat[-1,legend.__fieldOrder__.index(i)]
+            if 0 < len(str(cell)):
+                addressFix.addChild(xmlElement.xmlElement(i, "cm", cell, True))
+
+        address.addChild(addressFix)
+
+    if globals.__OPTIONAL__["ADDRESS_FREE"]:
+        addressFree = xmlElement.xmlElement("AddressFree", "cm", None, True)
+
+        child = ""
+        for i in addresslist:
+            cell = df.iat[-1,legend.__fieldOrder__.index(i)]
+            child = f"{child} {str(cell)}"
+
+        addressFree.addChild(" ".join(child.split()))
+
+        address.addChild(addressFree)
+
+    return address
+
 def reportedPayee(df, countryMS):
     reportedPayee = xmlElement.xmlElement("ReportedPayee" ,"cesop")
 
@@ -79,27 +121,21 @@ def reportedPayee(df, countryMS):
 
     taxIdentification = xmlElement.xmlElement("TAXIdentification", "cesop")
 
-    match(countryMS):
-        
-        case "NL" :
-            address = netherlands.NLAddress(df)
-        
-        case _ :
-            address = default.address(df, countryMS)  
+    addressVar = address(df, countryMS)
 
-    if globals.__OPTIONALS__["VATID"]:
+    if globals.__OPTIONAL__["VATID"]:
         VATId = xmlElement.xmlElement("VATId", "cesop", df.iat[0,legend.__fieldOrder__.index("VATId")],True)
         VATId.updateAttrib("issuedBy", df.iat[0,legend.__fieldOrder__.index("issuedByVAT")])
         VATId.addChild(df.iat[-1,legend.__fieldOrder__.index("VATId")])
         taxIdentification.addChild(VATId)
 
-    if globals.__OPTIONALS__["TAXID"]:
+    if globals.__OPTIONAL__["TAXID"]:
         TAXId = xmlElement.xmlElement("TAXId", None, df.iat[-1,legend.__fieldOrder__.index("TAXId")], True)
         TAXId.updateAttrib("issuedBy", df.iat[-1,legend.__fieldOrder__.index("issuedByTAX")])
         TAXId.updateAttrib("type", df.iat[-1,legend.__fieldOrder__.index("typeTAX")])
         taxIdentification.addChild(TAXId)
 
-    reportedPayee.addChildren([name, country, address#, emailAddress, webPage
+    reportedPayee.addChildren([name, country, addressVar#, emailAddress, webPage
                                ,taxIdentification])
 
     i = -1

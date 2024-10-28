@@ -5,33 +5,10 @@ from reportBuilder import sharedFuncts
 
 __author__ = "Christian Roberts"
 
-def NLAddress(address, countryMS, df):
-    address.setInline(False)
-    address.updateAttrib("legalAddressType", df.iat[-1,legend.__fieldOrder__.index("legalAddressType")].replace(' ', ))
-
-    countryCode = xmlElement.xmlElement("cm:CountryCode", countryMS, True)
-    addressFix = xmlElement.xmlElement("cm:AddressFix", None, False)
-
-    street = xmlElement.xmlElement("cm:Street", df.iat[-1,legend.__fieldOrder__.index("Street")], True)
-    postCode = xmlElement.xmlElement("cm:PostCode", df.iat[-1,legend.__fieldOrder__.index("PostCode")], True)
-    city = xmlElement.xmlElement("cm:City", df.iat[-1,legend.__fieldOrder__.index("City")], True)
-    countrySubentity = xmlElement.xmlElement("cm:CountrySubentity", df.iat[-1,legend.__fieldOrder__.index("CountrySubentity")], True)
-
-    addressFix.addChildren([street, postCode, city, countrySubentity])
-
-    address.addChildren([countryCode, addressFix])
-
 def NLMsgSpec(messageTypeIndic, countryMS, quarter, year):
     msgSpec = sharedFuncts.msgSpec(messageTypeIndic, countryMS, quarter, year)
 
     msgSpec.setTag("pspnl:" + msgSpec.getTag())
-
-    for i in msgSpec.children:
-        if isinstance(i, xmlElement.xmlElement):
-            i.setTag("cesop:" + i.getTag())
-        for j in i.children:
-            if isinstance(j, xmlElement.xmlElement):
-                j.setTag("cesop:" + j.getTag())
 
     return msgSpec
 
@@ -56,15 +33,6 @@ def PSPNL():
 
     return pspNL
 
-def addCesopToTag(element):
-    if isinstance(element, xmlElement.xmlElement):
-        for i in element.children:
-            addCesopToTag(i)
-        if "type" in element.getTag().lower():
-            element.setTag("cm:" + element.getTag())
-        else:
-            element.setTag("cesop:" + element.getTag())
-
 def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
     cesop = xmlElement.xmlElement("pspnl:CESOP")
     cesop.updateAttrib("version", globals.__CESOP_VERSION__)
@@ -73,8 +41,8 @@ def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
 
     paymentDataBody.setTag("pspnl:" + paymentDataBody.getTag())
 
-    for i in paymentDataBody.children:
-        addCesopToTag(i)
+    # for i in paymentDataBody.children:
+    #     addCesopToTag(i)
 
     cesop.addChildren([NLMsgSpec(messageTypeIndic, countryMS, quarter, year),
                         paymentDataBody])

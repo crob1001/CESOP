@@ -1,7 +1,7 @@
 __author__ = "Christian Roberts"
 
 global __VERSION__
-__VERSION__ = "0.8.0"
+__VERSION__ = "0.9.0"
 
 global __XML_VERSION__
 __XML_VERSION__ = "1.0"
@@ -27,10 +27,14 @@ __RSIN__ = ""
 global __KVK__ 
 __KVK__ = ""
 
-global __OPTIONALS__
-__OPTIONALS__ = {
+global __OPTIONAL__
+__OPTIONAL__ = {
+    "PAYMENT_DATA_BODY" : True,
+    "CORR_MESSAGE_REF_ID" : False,
+    "ADDRESS_FIX" : False,
+    "ADDRESS_FREE" : True,
     "VATID" : False,
-    "TAXID" : True
+    "TAXID" : False
 }
 
 global __QUARTERS__ 

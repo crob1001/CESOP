@@ -1,8 +1,9 @@
 import sys
+import globals
 from pathlib import Path
 
 from reportBuilder import netherlands, default, sharedFuncts
-from xmlSchema import xmlSchema
+from xmlSchema import xmlSchema, xmlElement
 
 __author__ = "Christian Roberts"
 
@@ -10,7 +11,10 @@ def main(quarter, year, countryMS, pspId, partNumber, partTotal, messageTypeIndi
 
     schema = xmlSchema.xmlSchema()
     
-    paymentDataBody = sharedFuncts.paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS)
+    if globals.__OPTIONAL__["PAYMENT_DATA_BODY"]:
+        paymentDataBody = sharedFuncts.paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS)
+    else:
+        paymentDataBody = xmlElement.xmlElement()
 
     match(countryMS):
         case "NL" :
