@@ -5,24 +5,10 @@ from datetime import datetime
 import legend
 import globals
 from xmlSchema import xmlElement
-from reportBuilder import default, netherlands
 
 __author__ = "Christian Roberts"
 
-def representative(representativeId, pspIdType, name, nameType):
-    representative = xmlElement.xmlElement("Representative")
-
-    representativeId = xmlElement.xmlElement("RepresentativeId", representativeId, True)
-    representativeId.updateAttrib("PSPIdType", pspIdType)
-
-    name = xmlElement.xmlElement("Name", name, True)
-    name.updateAttrib("nameType", nameType)
-
-    representative.addChildren([representativeId, name])
-
-    return representative
-
-def docSpec(docTypeIndic):
+def docSpec(docTypeIndic) -> xmlElement.xmlElement:
     docTypeIndic = xmlElement.xmlElement("DocTypeIndic", "cm", docTypeIndic, True)
     docRefID = xmlElement.xmlElement("DocRefId", "cm", uuid4(), True)
 
@@ -30,7 +16,7 @@ def docSpec(docTypeIndic):
     docSpec.addChildren([docTypeIndic, docRefID])
     return docSpec
 
-def paymentMethod(paymentMethodType):
+def paymentMethod(paymentMethodType) -> xmlElement.xmlElement:
     paymentMethodType = xmlElement.xmlElement("PaymentMethodType", "cm", paymentMethodType, True)
 
     paymentMethod = xmlElement.xmlElement("PaymentMethod", "cesop", paymentMethodType)
@@ -38,7 +24,7 @@ def paymentMethod(paymentMethodType):
     return paymentMethod
 
 def reportedTransaction(transactionIdentifier, dateTime, isRefund, transactionDateType, amount, currency, paymentMethodType,
-                             initiatedAtPhysicalPremisesOfMerchant, payerMS, payerMSSource, pspRole):
+                             initiatedAtPhysicalPremisesOfMerchant, payerMS, payerMSSource, pspRole) -> xmlElement.xmlElement:
     
     transactionIdentifier = xmlElement.xmlElement("TransactionIdentifier", "cesop", transactionIdentifier, True)
 
@@ -111,7 +97,7 @@ def address(df, countryMS) -> xmlElement.xmlElement:
 
     return address
 
-def reportedPayee(df, countryMS):
+def reportedPayee(df, countryMS) -> xmlElement.xmlElement:
     reportedPayee = xmlElement.xmlElement("ReportedPayee" ,"cesop")
 
     name = xmlElement.xmlElement("Name", "cesop", df.iat[-1,legend.__fieldOrder__.index("PayeeName")], True)
@@ -173,7 +159,7 @@ def reportedPayee(df, countryMS):
 
     return reportedPayee
 
-def reportingPSP(pspId, pspIdType, name, nameType):
+def reportingPSP(pspId, pspIdType, name, nameType) -> xmlElement.xmlElement:
     reportingPSP = xmlElement.xmlElement("ReportingPSP", "cesop")
 
     pspId = xmlElement.xmlElement("PSPId", "cesop", pspId, True)
@@ -186,7 +172,7 @@ def reportingPSP(pspId, pspIdType, name, nameType):
 
     return reportingPSP
 
-def paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
+def paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS) -> xmlElement.xmlElement:
     paymentDataBody = xmlElement.xmlElement("PaymentDataBody", "cesop")
 
     paymentDataBody.addChild(reportingPSP(pspId, pspIdType, name, nameType))
@@ -199,11 +185,10 @@ def paymentDataBody(pspId, pspIdType, name, nameType, fileList, countryMS):
 
         for countryCode, payeeName in dfs:
             paymentDataBody.addChild(reportedPayee(dfs.get_group(countryCode), countryMS))
-            # paymentDataBody.addChild('')
 
     return paymentDataBody
 
-def msgSpec(messageTypeIndic, transmittingCountry, quarter, year):
+def msgSpec(messageTypeIndic: str, transmittingCountry: str, quarter, year) -> xmlElement.xmlElement:
     transmitingCountry = xmlElement.xmlElement("TransmittingCountry", "cesop", transmittingCountry, True)
 
     msgType = xmlElement.xmlElement("MessageType", "cesop", "PMT", True)

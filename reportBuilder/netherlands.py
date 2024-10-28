@@ -14,12 +14,12 @@ def NLMsgSpec(messageTypeIndic, countryMS, quarter, year):
 
 def PSPNL():
     pspNL = xmlElement.xmlElement("pspnl:PSPNL")
-    pspNL.updateAttrib("xmlns:cm", "urn:eu:taxud:commontypes:v1")
-    pspNL.updateAttrib("xmlns:cesop", "urn:ec.europa.eu:taxud:fiscalis:cesop:v1")
+    pspNL.updateAttrib("xmlns:cm", f"urn:eu:taxud:commontypes:v{globals.__COMMON_TYPES_V__}")
+    pspNL.updateAttrib("xmlns:cesop", f"urn:ec.europa.eu:taxud:fiscalis:cesop:v{globals.__FISCALIS_CESOP_V__}")
     pspNL.updateAttrib("xmlns:xsi","http://www.w3.org/2001/xmlSchema-instance")
     pspNL.updateAttrib("xmlns:idnl","http://xml.belastingdienst.nl/schemas/IDNL/1.0")
     pspNL.updateAttrib("xmlns:pspnl","http://xml.belastingdienst.nl/schemas/PSPNL/1.0")
-    pspNL.updateAttrib("versionNL", "1.0")
+    pspNL.updateAttrib("versionNL", globals.__NL_VERSION__)
     pspNL.updateAttrib("xsi:schemaLocation","http://xml.belastingdienst.nl/schemas/PSPNL/1.0 file:///Q:/IV/BCA-UIM_VIA/aanslag-werk/2300%20HL%20gegevensaanleveringen/HL-PSP%20(CESOP)/PSP_1.0/XSD/XSD_PSPNL_1.0_R20230210/PSPNL_1.0_V1.20230210.xsd")
 
     pspNLHeader = xmlElement.xmlElement("PSPNL_Header", "pspnl")
@@ -40,9 +40,6 @@ def build(messageTypeIndic, countryMS, quarter, year, paymentDataBody):
     pspNL = PSPNL()
 
     paymentDataBody.setTag("pspnl:" + paymentDataBody.getTag())
-
-    # for i in paymentDataBody.children:
-    #     addCesopToTag(i)
 
     cesop.addChildren([NLMsgSpec(messageTypeIndic, countryMS, quarter, year),
                         paymentDataBody])

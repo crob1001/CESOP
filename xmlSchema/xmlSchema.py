@@ -1,8 +1,6 @@
 #xml version 1.0
 #UTF-8 encoding
 
-from xmlSchema import xmlElement
-
 __author__ = "Christian Roberts"
 
 class xmlSchema:
@@ -11,10 +9,10 @@ class xmlSchema:
         self.prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         self.content = {}
 
-    def addElement(self, element):
+    def addElement(self, element: any):
         self.content[element.getTag()] = element
 
-    def toFile(self, fileName, filePath):
+    def toFile(self, fileName: str, filePath: str):
         file = open(filePath+fileName, "w", encoding="utf-8")
 
         file.write(self.__str__())

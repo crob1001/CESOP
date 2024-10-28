@@ -1,13 +1,16 @@
 __author__ = "Christian Roberts"
 
 global __VERSION__
-__VERSION__ = "0.9.1"
+__VERSION__ = "0.9.2"
 
 global __XML_VERSION__
 __XML_VERSION__ = "1.0"
 
 global __CESOP_VERSION__
 __CESOP_VERSION__ = "4.02"
+
+global __NL_VERSION__
+__NL_VERSION__ = "1.0"
 
 global __COMMON_TYPES_V__
 __COMMON_TYPES_V__ = 1
@@ -31,8 +34,8 @@ global __OPTIONAL__
 __OPTIONAL__ = {
     "PAYMENT_DATA_BODY" : True,
     "CORR_MESSAGE_REF_ID" : False,
-    "ADDRESS_FIX" : False,
-    "ADDRESS_FREE" : True,
+    "ADDRESS_FIX" : True,
+    "ADDRESS_FREE" : False,
     "VATID" : False,
     "TAXID" : False
 }

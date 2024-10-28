@@ -117,26 +117,40 @@ class MainWindow(QMainWindow):
 
     #seperate menu or Qactions out into new class for better readability of this and initMenuBar funts
 
-    def initMenuBar(self):
-
-        menuBar = self.menuBar()
+    def fileMenu(self, menuBar):
         fileMenu = menuBar.addMenu('&File')
-        optionalMenu = menuBar.addMenu('&Optional')
-        abtMenu = menuBar.addMenu('&About')
-        
         fileMenu.addSeparator()
         fileMenu.addAction(menuActions.exitAction(self))
 
-        optionalMenu.addAction(menuActions.createToggleAction(self, "VatId", toggle.toggleVat))
-        optionalMenu.addSeparator()
-        optionalMenu.addAction(menuActions.createToggleAction(self, "TaxId", toggle.toggleTax))
-        optionalMenu.addSeparator()
-        optionalMenu.addAction(menuActions.createToggleAction(self, "Address_Fix", toggle.toggleAddressFix))
-        optionalMenu.addSeparator()
-        optionalMenu.addAction(menuActions.createToggleAction(self, "Address_Free", toggle.toggleAddressFree))
+    def optionalElementsMenu(self, parentMenu):
+        menu = parentMenu.addMenu("Optional Elements")
 
+        menu.addAction(menuActions.createToggleAction(self, "VatId", toggle.toggleVat))
+        menu.addSeparator()
+
+        menu.addAction(menuActions.createToggleAction(self, "TaxId", toggle.toggleTax))
+        menu.addSeparator()
+
+        menu.addAction(menuActions.createToggleAction(self, "Address_Fix", toggle.toggleAddressFix))
+        menu.addSeparator()
+
+        menu.addAction(menuActions.createToggleAction(self, "Address_Free", toggle.toggleAddressFree))
+
+    def optionsMenu(self, menuBar):
+        optionalMenu = menuBar.addMenu('&Optional')
+        self.optionalElementsMenu(optionalMenu)
+
+    def abtMenu(self, menuBar):
+        abtMenu = menuBar.addMenu('&About')
         abtMenu.addAction(QAction("Software Version: " + globals.__VERSION__, self))
         abtMenu.addAction(QAction("Software Version: " + globals.__CESOP_VERSION__, self))
+
+    def initMenuBar(self):
+        menuBar = self.menuBar()
+
+        self.fileMenu(menuBar)
+        self.optionsMenu(menuBar)
+        self.abtMenu(menuBar)
 
         self.status_bar = self.statusBar()
         self.show()
