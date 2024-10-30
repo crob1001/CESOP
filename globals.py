@@ -1,7 +1,7 @@
 __author__ = "Christian Roberts"
 
 global __VERSION__
-__VERSION__ = "0.9.2"
+__VERSION__ = "1.0.0"
 
 global __XML_VERSION__
 __XML_VERSION__ = "1.0"

@@ -107,15 +107,19 @@ class MainWindow(QMainWindow):
         return btn
 
     def build(self):
-        main.main(list(globals.__QUARTERS__.keys())[self.quarterComboBox.getindex()], self.yearInputBox.getInputText(),
-                    list(globals.__COUNTRIES__.keys())[self.countryComboBox.getindex()], self.pspIDInputBox.getInputText(), 
-                    self.pageNumInputBox.getInputText(), self.pageTotalInputBox.getInputText(),
+        main.main(
+                    list(globals.__QUARTERS__.keys())[self.quarterComboBox.getindex()],
+                    self.yearInputBox.getInputText(),
+                    list(globals.__COUNTRIES__.keys())[self.countryComboBox.getindex()],
+                    self.pspIDInputBox.getInputText(),
+                    self.pageNumInputBox.getInputText(),
+                    self.pageTotalInputBox.getInputText(),
                     list(globals.__MSG_TYPE_INDIC__.keys())[self.messageTypeIndic.getindex()],
-                    list(globals.__PSP_ID_TYPE__.keys())[self.pspIdType.getindex()], self.name.getInputText(),
-                    list(globals.__NAME_TYPES__.keys())[self.nameType.getindex()], self.fileHandler.getFileList()
-                    )
-
-    #seperate menu or Qactions out into new class for better readability of this and initMenuBar funts
+                    list(globals.__PSP_ID_TYPE__.keys())[self.pspIdType.getindex()],
+                    self.name.getInputText(),
+                    list(globals.__NAME_TYPES__.keys())[self.nameType.getindex()],
+                    self.fileHandler.getFileList()
+                )
 
     def fileMenu(self, menuBar):
         fileMenu = menuBar.addMenu('&File')
